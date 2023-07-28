@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:image_viewer_ca/data/photo_provider.dart';
 import 'package:image_viewer_ca/model/photo.dart';
 import 'package:image_viewer_ca/ui/widget/photo_card.dart';
-import 'package:image_viewer_ca/data/api.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,8 +12,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final TextEditingController textController;
-
-  List<Photo> photos = [];
 
   @override
   void initState() {
@@ -29,6 +27,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final homeScreenViewModel = PhotoProvider.of(context).homeScreenViewModel;
+
     return Scaffold(
       body: Column(
         children: [
@@ -41,14 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 suffixIcon: IconButton(
                   onPressed: () {
                     if (textController.text.toString().trim().isNotEmpty) {
-                      final String query =
-                          textController.text.toString().trim();
-
-                      PixabayApi.photoCardFetch(query).then((value) {
-                        setState(() {
-                          photos = value;
-                        });
-                      });
+                      homeScreenViewModel.fetch(textController.text.toString());
                     }
                   },
                   icon: Icon(
@@ -66,17 +59,30 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           //grid area
-          Expanded(
-            child: GridView.builder(
-              itemCount: photos.length,
-              padding: const EdgeInsets.all(16),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, mainAxisSpacing: 16, crossAxisSpacing: 16),
-              itemBuilder: (context, index) => PhotoCard(
-                photo: photos[index],
-              ),
-            ),
-          )
+          StreamBuilder<List<Photo>>(
+              stream: homeScreenViewModel.photoStream,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const CircularProgressIndicator();
+                }
+
+                final photos = snapshot.data!;
+
+                return Expanded(
+                  child: GridView.builder(
+                    itemCount: photos.length,
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16),
+                    itemBuilder: (context, index) => PhotoCard(
+                      photo: photos[index],
+                    ),
+                  ),
+                );
+              })
         ],
       ),
     );

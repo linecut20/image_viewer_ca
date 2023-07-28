@@ -1,13 +1,15 @@
+import 'package:image_viewer_ca/data/photo_api_repository.dart';
 import 'package:image_viewer_ca/model/photo.dart';
 import 'package:dio/dio.dart';
 
 final dio = Dio();
 
-class PixabayApi {
-  static const String baseURL = 'https://pixabay.com/api/';
-  static const String apiKey = '28767423-2c8cd254bff6a105688b5fb1b';
+class PixabayApi implements PhotoApiRepository {
+  final String baseURL = 'https://pixabay.com/api/';
+  final String apiKey = '28767423-2c8cd254bff6a105688b5fb1b';
 
-  static Future<List<Photo>> photoCardFetch(String query) async {
+  @override
+  Future<List<Photo>> fetch(String query) async {
     final response =
         await dio.get('$baseURL?key=$apiKey&image_type=photo&q=$query');
 

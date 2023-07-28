@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'ui/page/home_screen.dart';
+import 'package:image_viewer_ca/data/api.dart';
+import 'package:image_viewer_ca/data/photo_provider.dart';
+import 'package:image_viewer_ca/ui/page/home_screen/home_screen_view_model.dart';
+import 'ui/page/home_screen/home_screen.dart';
 
 void main() {
   runApp(const ImageViewerCaApp());
@@ -8,7 +11,6 @@ void main() {
 class ImageViewerCaApp extends StatelessWidget {
   const ImageViewerCaApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,7 +19,9 @@ class ImageViewerCaApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: PhotoProvider(
+          homeScreenViewModel: HomeScreenViewModel(PixabayApi()),
+          child: const HomeScreen()),
     );
   }
 }
