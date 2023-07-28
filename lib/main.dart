@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_viewer_ca/data/api.dart';
-import 'package:image_viewer_ca/data/photo_provider.dart';
-import 'package:image_viewer_ca/ui/page/home_screen/home_screen_view_model.dart';
-import 'ui/page/home_screen/home_screen.dart';
+import 'package:image_viewer_ca/presentation/home_screen_page/home_screen.dart';
+import 'package:image_viewer_ca/presentation/home_screen_page/home_screen_view_model.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const ImageViewerCaApp());
@@ -19,9 +19,11 @@ class ImageViewerCaApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: PhotoProvider(
-          homeScreenViewModel: HomeScreenViewModel(PixabayApi()),
-          child: const HomeScreen()),
+      home: MultiProvider(providers: [
+        ChangeNotifierProvider(
+          create: (_) => HomeScreenViewModel(PixabayApi()),
+        ),
+      ], child: const HomeScreen()),
     );
   }
 }
