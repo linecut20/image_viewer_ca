@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_viewer_ca/data/api.dart';
-import 'package:image_viewer_ca/presentation/home_screen_page/home_screen.dart';
-import 'package:image_viewer_ca/presentation/home_screen_page/home_screen_view_model.dart';
+import 'package:image_viewer_ca/page/home_screen_page/home_screen.dart';
+import 'package:image_viewer_ca/page/home_screen_page/home_screen_view_model.dart';
 import 'package:provider/provider.dart';
 
 void main() {

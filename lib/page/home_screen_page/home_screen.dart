@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:image_viewer_ca/model/photo.dart';
-import 'package:image_viewer_ca/presentation/home_screen_page/home_screen_view_model.dart';
+import 'package:image_viewer_ca/page/home_screen_page/home_screen_view_model.dart';
 import 'package:image_viewer_ca/ui/widget/photo_card.dart';
 import 'package:provider/provider.dart';
 
@@ -17,6 +16,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     textController = TextEditingController();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final read = context.read<HomeScreenViewModel>();
+      read.eventStream.listen((event) {
+        final snackBar = SnackBar(content: Text(event));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      });
+    });
+
     super.initState();
   }
 
