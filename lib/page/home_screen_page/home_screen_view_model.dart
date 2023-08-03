@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:image_viewer_ca/data/api.dart';
 import 'package:image_viewer_ca/data/result.dart';
 import 'package:image_viewer_ca/model/photo.dart';
+import 'package:image_viewer_ca/use_case/get_photos_use_case.dart';
 
 class HomeScreenViewModel with ChangeNotifier {
   final PixabayApi api;
@@ -22,10 +23,10 @@ class HomeScreenViewModel with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
 
-    api.fetch(query).then((Result<List<Photo>> result) {
-      if (result is Success<List<Photo>>) {
+    GetPhotosUseCase(api).execute(query).then((Result result) {
+      if (result is Success) {
         _photos = result.value;
-      } else if (result is Error<List<Photo>>) {
+      } else if (result is Error) {
         if (kDebugMode) {
           print(result.e);
         }
@@ -37,5 +38,21 @@ class HomeScreenViewModel with ChangeNotifier {
 
       notifyListeners();
     });
+
+    // api.fetch(query).then((Result<List<Photo>> result) {
+    //   if (result is Success<List<Photo>>) {
+    //     _photos = result.value;
+    //   } else if (result is Error<List<Photo>>) {
+    //     if (kDebugMode) {
+    //       print(result.e);
+    //     }
+    //     eventController.add(result.e);
+    //     _photos = [];
+    //   }
+
+    //   _isLoading = false;
+
+    //   notifyListeners();
+    // });
   }
 }

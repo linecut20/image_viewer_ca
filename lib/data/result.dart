@@ -10,7 +10,8 @@ class Success<T> implements Result<T> {
 }
 
 class Error<T> implements Result<T> {
-  final String e;
+  final String _e;
+  String get e => _e;
 
-  Error(this.e);
+  Error(this._e);
 }
