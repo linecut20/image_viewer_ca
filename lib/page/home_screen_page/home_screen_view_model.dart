@@ -9,12 +9,19 @@ class HomeScreenViewModel with ChangeNotifier {
   final PixabayApi api;
   List<Photo> _photos = [];
   List<Photo> get photos => _photos;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   final StreamController eventController = StreamController<String>();
   Stream get eventStream => eventController.stream;
 
   HomeScreenViewModel(this.api);
 
   void fetch(String query) {
+    _isLoading = true;
+    notifyListeners();
+
     api.fetch(query).then((Result<List<Photo>> result) {
       if (result is Success<List<Photo>>) {
         _photos = result.value;
@@ -25,6 +32,8 @@ class HomeScreenViewModel with ChangeNotifier {
         eventController.add(result.e);
         _photos = [];
       }
+
+      _isLoading = false;
 
       notifyListeners();
     });
